@@ -105,6 +105,7 @@ Source9: php.modconf
 Source10: php.ztsmodconf
 Source13: nginx-fpm.conf
 Source14: nginx-php.conf
+Source15: httpd-fpm.conf
 Source20: php-fpm.init
 # Configuration files for some extensions
 Source50: 10-opcache.ini
@@ -270,6 +271,34 @@ Conflicts: php-fpm < %{version}-%{release}
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
 implementation with some additional features useful for sites of
 any size, especially busier sites.
+
+
+%package fpm-nginx
+Group: Development/Languages
+Summary: Nginx configuration for PHP-FPM
+BuildArch: noarch
+Requires: %{name}-fpm = %{version}-%{release}
+Requires: nginx
+Provides: php-fpm-nginx = %{version}-%{release}
+Conflicts: php-fpm-nginx < %{version}-%{release}
+
+
+%description fpm-nginx
+Nginx configuration files for the PHP FastCGI Process Manager.
+
+
+%package fpm-httpd
+Group: Development/Languages
+Summary: Apache HTTP Server configuration for PHP-FPM
+BuildArch: noarch
+Requires: %{name}-fpm = %{version}-%{release}
+Requires: httpd >= 2.4
+Provides: php-fpm-httpd = %{version}-%{release}
+Conflicts: php-fpm-httpd < %{version}-%{release}
+
+
+%description fpm-httpd
+Apache HTTP Server configuration file for the PHP FastCGI Process Manager.
 
 
 %package common
@@ -1523,6 +1552,11 @@ install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm
 %if ! %{with_systemd}
 sed -i -e 's:/run:%{_localstatedir}/run:' $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
 %endif
+# Apache httpd configuration
+install -D -m 644 %{SOURCE15} $RPM_BUILD_ROOT%{_httpd_confdir}/php-fpm.conf
+%if ! %{with_systemd}
+sed -i -e 's:/run:%{_localstatedir}/run:' $RPM_BUILD_ROOT%{_httpd_confdir}/php-fpm.conf
+%endif
 install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/php.conf
 
 # Generate files lists and stub .ini files for each subpackage
@@ -1742,12 +1776,9 @@ fi
 %attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
 %attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
 %attr(0770,root,apache) %dir %{_sharedstatedir}/php/opcache
-%config(noreplace) %{_httpd_confdir}/php.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
-%config(noreplace) %{_sysconfdir}/nginx/conf.d/php-fpm.conf
-%config(noreplace) %{_sysconfdir}/nginx/default.d/php.conf
 %if %{with_systemd}
 %dir /run/php-fpm
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
@@ -1764,6 +1795,13 @@ fi
 %{_mandir}/man8/php-fpm.8*
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
+
+%files fpm-nginx
+%config(noreplace) %{_sysconfdir}/nginx/conf.d/php-fpm.conf
+%config(noreplace) %{_sysconfdir}/nginx/default.d/php.conf
+
+%files fpm-httpd
+%config(noreplace) %{_httpd_confdir}/php-fpm.conf
 
 %files devel
 %{_bindir}/php-config
@@ -1832,6 +1870,7 @@ fi
 - Use correct macros directory via %%rpmmacrodir (from epel-rpm-macros)
 - Dual compatibility for httpd 2.2/2.4
 - Move httpd module to a mod_php subpackage
+- Move webserver configurations into subpackages
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
