@@ -1604,7 +1604,7 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
 %endif
     < %{SOURCE3} > macros.php
 install -m 644 -D macros.php \
-           $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.php
+           $RPM_BUILD_ROOT%{rpmmacrodir}/macros.php
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
@@ -1751,7 +1751,7 @@ fi
 %{_mandir}/man1/zts-phpize.1*
 %endif
 %{_mandir}/man1/php-config.1*
-%{_rpmconfigdir}/macros.d/macros.php
+%{rpmmacrodir}/macros.php
 
 %files embedded
 %{_libdir}/libphp7.so
@@ -1802,6 +1802,7 @@ fi
 - Port from Fedora to IUS
 - Dual systemd/sysvinit compatibility
 - Use bundled PCRE on RHEL
+- Use correct macros directory via %%rpmmacrodir (from epel-rpm-macros)
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
