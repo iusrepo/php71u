@@ -51,6 +51,12 @@
 %global with_libgd 0
 %endif
 
+%if 0%{?fedora} >= 22
+%global with_libpcre 1
+%else
+%global with_libpcre 0
+%endif
+
 %global with_zip     0
 %global with_libzip  0
 # Not yet compatible with firebird 3
@@ -131,7 +137,9 @@ BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-BuildRequires: pcre-devel >= 6.6
+%if %{with_libpcre}
+BuildRequires: pcre-devel >= 8.38
+%endif
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
@@ -336,7 +344,9 @@ package and the php-cli package.
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
+%if %{with_libpcre}
 Requires: pcre-devel%{?_isa}
+%endif
 %if %{with_zts}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
@@ -1120,7 +1130,9 @@ ln -sf ../configure
     --without-gdbm \
     --with-jpeg-dir=%{_prefix} \
     --with-openssl \
+%if %{with_libpcre}
     --with-pcre-regex=%{_prefix} \
+%endif
     --with-zlib \
     --with-layout=GNU \
     --with-kerberos \
@@ -1789,6 +1801,7 @@ fi
 * Fri Dec 02 2016 Carl George <carl.george@rackspace.com> - 7.1.0-1.ius
 - Port from Fedora to IUS
 - Dual systemd/sysvinit compatibility
+- Use bundled PCRE on RHEL
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
