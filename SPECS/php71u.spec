@@ -1885,6 +1885,7 @@ fi
 - Move webserver configurations into subpackages
 - Use separate session/cache directories for fpm and mod_php
 - Use dedicated user for php-fpm
+- Switch fpm from UDS to TCP port
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
