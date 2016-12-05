@@ -41,6 +41,13 @@
 
 # needed at srpm build time, when httpd-devel not yet installed
 %{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo 0-0)}}
+# /usr/sbin/apsx with httpd < 2.4 and defined as /usr/bin/apxs with httpd >= 2.4
+%{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
+%{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 %global with_dtrace 1
 
@@ -1440,12 +1447,21 @@ install -m 755 build-zts/libs/libphp7.so $RPM_BUILD_ROOT%{_httpd_moddir}/libphp7
 %endif
 
 # Apache config fragment
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+# Single config file with httpd < 2.4
+install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%if %{with_zts}
+cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%endif
+cat %{SOURCE1} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%else
 # Dual config file with httpd >= 2.4 (fedora >= 18)
 install -D -m 644 %{SOURCE9} $RPM_BUILD_ROOT%{_httpd_modconfdir}/15-php.conf
 %if %{with_zts}
 cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_modconfdir}/15-php.conf
 %endif
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 %if %{with_zts}
@@ -1657,7 +1673,9 @@ fi
 %attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
 %attr(0770,root,apache) %dir %{_sharedstatedir}/php/opcache
 %config(noreplace) %{_httpd_confdir}/php.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/15-php.conf
+%endif
 %{_httpd_contentdir}/icons/php.gif
 
 %files common -f files.common
@@ -1803,6 +1821,7 @@ fi
 - Dual systemd/sysvinit compatibility
 - Use bundled PCRE on RHEL
 - Use correct macros directory via %%rpmmacrodir (from epel-rpm-macros)
+- Dual compatibility for httpd 2.2/2.4
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
