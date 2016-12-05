@@ -140,7 +140,7 @@ Patch300: php-5.6.3-datetests.patch
 
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9
-BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
+BuildRequires: pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
@@ -156,25 +156,6 @@ BuildRequires: libzip-devel >= 0.11
 BuildRequires: systemtap-sdt-devel
 %endif
 
-%if %{with_zts}
-Provides: php-zts = %{version}-%{release}
-Provides: php-zts%{?_isa} = %{version}-%{release}
-Provides: %{name}-zts = %{version}-%{release}
-Provides: %{name}-zts%{?_isa} = %{version}-%{release}
-%endif
-
-Requires: httpd-mmn = %{_httpd_mmn}
-Provides: mod_php = %{version}-%{release}
-Requires: php-common%{?_isa} = %{version}-%{release}
-# For backwards-compatibility, require php-cli for the time being:
-Requires: php-cli%{?_isa} = %{version}-%{release}
-# php engine for Apache httpd webserver
-Provides: php(httpd)
-
-Provides: php = %{version}-%{release}
-Provides: php%{?_isa} = %{version}-%{release}
-Conflicts: php < %{version}-%{release}
-
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
@@ -189,8 +170,36 @@ non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
 use of PHP coding is probably as a replacement for CGI scripts.
 
-The php package contains the module (often referred to as mod_php)
-which adds support for the PHP language to Apache HTTP Server.
+%package -n mod_%{name}
+Group: Development/Languages
+Summary: PHP module for the Apache HTTP Server
+BuildRequires: httpd-devel < 2.4.10
+Requires: httpd-mmn = %{_httpd_mmn}
+Requires: php-common%{?_isa} = %{version}-%{release}
+
+%if %{with_zts}
+Provides: php-zts = %{version}-%{release}
+Provides: php-zts%{?_isa} = %{version}-%{release}
+Provides: %{name}-zts = %{version}-%{release}
+Provides: %{name}-zts%{?_isa} = %{version}-%{release}
+%endif
+
+# php engine for Apache httpd webserver
+Provides: php(httpd)
+
+Provides: %{name} = %{version}-%{release}
+Provides: %{name}%{?_isa} = %{version}-%{release}
+Provides: php = %{version}-%{release}
+Provides: php%{?_isa} = %{version}-%{release}
+Conflicts: php < %{version}-%{release}
+
+Provides: mod_php = %{version}-%{release}
+Provides: mod_php%{?_isa} = %{version}-%{release}
+Conflicts: mod_php < %{version}-%{release}
+
+%description -n mod_%{name}
+The mod_php package contains the module which adds support for the PHP language
+to Apache HTTP Server.
 
 
 %package cli
@@ -1664,7 +1673,7 @@ fi
 %post embedded -p /sbin/ldconfig
 %postun embedded -p /sbin/ldconfig
 
-%files
+%files -n mod_%{name}
 %{_httpd_moddir}/libphp7.so
 %if %{with_zts}
 %{_httpd_moddir}/libphp7-zts.so
@@ -1822,6 +1831,7 @@ fi
 - Use bundled PCRE on RHEL
 - Use correct macros directory via %%rpmmacrodir (from epel-rpm-macros)
 - Dual compatibility for httpd 2.2/2.4
+- Move httpd module to a mod_php subpackage
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
