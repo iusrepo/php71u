@@ -1506,15 +1506,20 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 %endif
 install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php
-install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/peclxml
-install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/session
-install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/wsdlcache
-install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/opcache
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/session
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/wsdlcache
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/opcache
 
+install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/peclxml
 install -m 755 -d $RPM_BUILD_ROOT%{_docdir}/pecl
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/tests/pecl
 
 # PHP-FPM stuff
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm/session
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm/wsdlcache
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm/opcache
 # Log
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/log/php-fpm
 # Config
@@ -1712,9 +1717,10 @@ fi
 %if %{with_zts}
 %{_httpd_moddir}/libphp7-zts.so
 %endif
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/opcache
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/mod_php
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/mod_php/session
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/mod_php/wsdlcache
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/mod_php/opcache
 %config(noreplace) %{_httpd_confdir}/php.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/15-php.conf
@@ -1773,9 +1779,10 @@ fi
 %files fpm
 %doc php-fpm.conf.default www.conf.default
 %license fpm_LICENSE
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/opcache
+%attr(0770,root,php-fpm) %dir %{_sharedstatedir}/php/fpm
+%attr(0770,root,php-fpm) %dir %{_sharedstatedir}/php/fpm/session
+%attr(0770,root,php-fpm) %dir %{_sharedstatedir}/php/fpm/wsdlcache
+%attr(0770,root,php-fpm) %dir %{_sharedstatedir}/php/fpm/opcache
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
@@ -1871,6 +1878,7 @@ fi
 - Dual compatibility for httpd 2.2/2.4
 - Move httpd module to a mod_php subpackage
 - Move webserver configurations into subpackages
+- Use separate session/cache directories for fpm and mod_php
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
