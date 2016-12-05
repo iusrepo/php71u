@@ -1680,6 +1680,12 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
 # Remove irrelevant docs
 rm -f README.{Zeus,QNX,CVS-RULES}
 
+%pre fpm
+getent group php-fpm >/dev/null || groupadd -r php-fpm
+getent passwd php-fpm >/dev/null || \
+    useradd -r -g php-fpm -d %{_sharedstatedir}/php/fpm \
+    -s /sbin/nologin -c "php-fpm" php-fpm
+exit 0
 
 %post fpm
 %if %{with_systemd}
@@ -1797,8 +1803,7 @@ fi
 %endif
 %{_sbindir}/php-fpm
 %dir %{_sysconfdir}/php-fpm.d
-# log owned by apache for log
-%attr(770,apache,root) %dir %{_localstatedir}/log/php-fpm
+%attr(750,php-fpm,php-fpm) %dir %{_localstatedir}/log/php-fpm
 %{_mandir}/man8/php-fpm.8*
 %dir %{_datadir}/fpm
 %{_datadir}/fpm/status.html
@@ -1879,6 +1884,7 @@ fi
 - Move httpd module to a mod_php subpackage
 - Move webserver configurations into subpackages
 - Use separate session/cache directories for fpm and mod_php
+- Use dedicated user for php-fpm
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
