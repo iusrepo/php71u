@@ -64,7 +64,7 @@
 %global with_libpcre 0
 %endif
 
-%global with_zip     0
+%global with_zip     1
 %global with_libzip  0
 # Not yet compatible with firebird 3
 # https://bugs.php.net/bug.php?id=73512
@@ -85,7 +85,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
 Version: 7.1.0
-Release: 1.ius%{?dist}
+Release: 2.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1877,6 +1877,9 @@ fi
 
 
 %changelog
+* Fri Dec 09 2016 Carl George <carl.george@rackspace.com> - 7.1.0-2.ius
+- Enable zip extension
+
 * Fri Dec 02 2016 Carl George <carl.george@rackspace.com> - 7.1.0-1.ius
 - Port from Fedora to IUS
 - Dual systemd/sysvinit compatibility
