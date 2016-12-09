@@ -1511,10 +1511,6 @@ install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/wsdlcache
 install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/mod_php/opcache
 
-install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/peclxml
-install -m 755 -d $RPM_BUILD_ROOT%{_docdir}/pecl
-install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/tests/pecl
-
 # PHP-FPM stuff
 install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm
 install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/fpm/session
@@ -1749,11 +1745,7 @@ fi
 %dir %{_libdir}/php-zts/modules
 %endif
 %dir %{_sharedstatedir}/php
-%dir %{_sharedstatedir}/php/peclxml
 %dir %{_datadir}/php
-%dir %{_docdir}/pecl
-%dir %{_datadir}/tests
-%dir %{_datadir}/tests/pecl
 
 %files cli
 %{_bindir}/php
@@ -1879,6 +1871,7 @@ fi
 %changelog
 * Fri Dec 09 2016 Carl George <carl.george@rackspace.com> - 7.1.0-2.ius
 - Enable zip extension
+- Revert 'drop runtime dependency on PEAR' (file triggers) changes
 
 * Fri Dec 02 2016 Carl George <carl.george@rackspace.com> - 7.1.0-1.ius
 - Port from Fedora to IUS
