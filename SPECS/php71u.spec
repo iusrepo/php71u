@@ -130,6 +130,7 @@ Patch45: php-5.6.3-ldap_r.patch
 Patch46: php-7.0.0-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.6.3-phpinfo.patch
+Patch49: php-7.1.0-curltls.patch
 
 # Upstream fixes (100+)
 
@@ -1012,6 +1013,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%if 0%{?rhel}
+%patch49 -p1 -b .curltls
+%endif
 
 # upstream patches
 
@@ -1867,6 +1871,7 @@ fi
 %changelog
 * Fri Dec 23 2016 Carl George <carl.george@rackspace.com> - 7.1.0-3.ius
 - Don't enable opcache.huge_code_pages during %%prep
+- Add patch49 to enable TLS 1.1/1.2 support
 
 * Fri Dec 09 2016 Carl George <carl.george@rackspace.com> - 7.1.0-2.ius
 - Enable zip extension
