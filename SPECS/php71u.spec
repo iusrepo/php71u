@@ -85,7 +85,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
 Version: 7.1.0
-Release: 2.ius%{?dist}
+Release: 3.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1114,10 +1114,6 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
 
-%ifarch x86_64
-sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
-%endif
-
 
 %build
 # aclocal workaround - to be improved
@@ -1869,6 +1865,9 @@ fi
 
 
 %changelog
+* Fri Dec 23 2016 Carl George <carl.george@rackspace.com> - 7.1.0-3.ius
+- Don't enable opcache.huge_code_pages during %%prep
+
 * Fri Dec 09 2016 Carl George <carl.george@rackspace.com> - 7.1.0-2.ius
 - Enable zip extension
 - Revert 'drop runtime dependency on PEAR' (file triggers) changes
