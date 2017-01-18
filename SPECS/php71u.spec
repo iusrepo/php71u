@@ -84,8 +84,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.0
-Release: 3.ius%{?dist}
+Version: 7.1.1
+Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1869,6 +1869,9 @@ fi
 
 
 %changelog
+* Wed Jan 18 2017 Gregory Boddin <gregory@siwhine.net> - 7.1.1-1.ius
+- Latest upstream
+
 * Fri Dec 23 2016 Carl George <carl.george@rackspace.com> - 7.1.0-3.ius
 - Don't enable opcache.huge_code_pages during %%prep
 - Add patch49 to enable TLS 1.1/1.2 support
