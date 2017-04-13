@@ -1,4 +1,4 @@
-# IUS spec file for php70u, forked from
+# IUS spec file for php71u, forked from
 #
 # Fedora spec file for php
 #
