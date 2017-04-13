@@ -1599,11 +1599,11 @@ EOF
 %endif
     fi
     cat > files.${mod} <<EOF
-%attr(755,root,root) %{_libdir}/php/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${ini}
+%{_libdir}/php/modules/${mod}.so
+%config(noreplace) %{_sysconfdir}/php.d/${ini}
 %if %{with_zts}
-%attr(755,root,root) %{_libdir}/php-zts/modules/${mod}.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${ini}
+%{_libdir}/php-zts/modules/${mod}.so
+%config(noreplace) %{_sysconfdir}/php-zts.d/${ini}
 %endif
 EOF
 done
@@ -1866,6 +1866,7 @@ fi
 * Thu Apr 13 2017 Carl George <carl.george@rackspace.com> - 7.1.4-1.ius
 - Latest upstream
 - timelib is MIT license (Fedora)
+- remove %%attr, see #1432372 (Fedora)
 
 * Wed Mar 15 2017 Carl George <carl.george@rackspace.com> - 7.1.3-1.ius
 - Latest upstream
