@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.5
+Version: 7.1.6
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -319,8 +319,10 @@ Provides: php-core = %{version}, php-core%{?_isa} = %{version}
 Provides: php-ctype, php-ctype%{?_isa}
 Provides: php-curl, php-curl%{?_isa}
 Provides: php-date, php-date%{?_isa}
+Provides: bundled(timelib)
 Provides: php-exif, php-exif%{?_isa}
 Provides: php-fileinfo, php-fileinfo%{?_isa}
+Provides: bundled(libmagic) = 5.29
 Provides: php-filter, php-filter%{?_isa}
 Provides: php-ftp, php-ftp%{?_isa}
 Provides: php-gettext, php-gettext%{?_isa}
@@ -728,6 +730,8 @@ Group: Development/Languages
 # onigurama is licensed under BSD
 # ucgendat is licensed under OpenLDAP
 License: PHP and LGPLv2 and BSD and OpenLDAP
+Provides: bundled(oniguruma) = 5.9.6
+Provides: bundled(libmbfl) = 1.3.2
 Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-mbstring = %{version}-%{release}
 Provides: php-mbstring%{?_isa} = %{version}-%{release}
@@ -759,6 +763,7 @@ BuildRequires: libpng-devel
 BuildRequires: freetype-devel
 BuildRequires: libXpm-devel
 BuildRequires: libwebp-devel
+Provides: bundled(gd) = 2.0.35
 %endif
 Provides: php-gd = %{version}-%{release}
 Provides: php-gd%{?_isa} = %{version}-%{release}
@@ -1863,6 +1868,11 @@ fi
 
 
 %changelog
+* Fri Jun 09 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.6-1.ius
+- Latest upstream
+- add Provides for bundled libraries. from Fedora
+  http://pkgs.fedoraproject.org/cgit/rpms/php.git/commit/?id=fa2b75755b5fec267886006a640767193b1d45ce
+
 * Thu May 11 2017 Carl George <carl.george@rackspace.com> - 7.1.5-1.ius
 - Latest upstream
 
