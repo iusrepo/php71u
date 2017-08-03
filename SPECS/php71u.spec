@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.7
+Version: 7.1.8
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1868,6 +1868,9 @@ fi
 
 
 %changelog
+* Thu Aug 03 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.8-1.ius
+- Latest upstream
+
 * Thu Jul 06 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.7-1.ius
 - Latest upstream
 
