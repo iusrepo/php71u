@@ -85,7 +85,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
 Version: 7.1.9
-Release: 1.ius%{?dist}
+Release: 2.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1212,6 +1212,7 @@ build --libdir=%{_libdir}/php \
       --with-gd=shared,%{_prefix} \
 %else
       --with-gd=shared \
+      --with-webp-dir=%{_prefix} \
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \
@@ -1340,6 +1341,7 @@ build --includedir=%{_includedir}/php-zts \
       --with-gd=shared,%{_prefix} \
 %else
       --with-gd=shared \
+      --with-webp-dir=%{_prefix} \
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \
@@ -1870,6 +1872,9 @@ fi
 
 
 %changelog
+* Mon Sep 11 2017 Carl George <carl@george.computer> - 7.1.9-2.ius
+- Enable WebP support when using bundled GD
+
 * Fri Sep 01 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.9-1.ius
 - Latest upstream
 - remove php-sqlite3.patch
