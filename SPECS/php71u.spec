@@ -84,8 +84,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.9
-Release: 2.ius%{?dist}
+Version: 7.1.10
+Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -114,6 +114,7 @@ Source50: 10-opcache.ini
 Source51: opcache-default.blacklist
 
 # Build fixes
+Patch1: php-7.1.7-httpd.patch
 Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
@@ -130,10 +131,11 @@ Patch45: php-5.6.3-ldap_r.patch
 Patch46: php-7.0.0-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.6.3-phpinfo.patch
+# Automatically load OpenSSL configuration file
+Patch48: php-7.1.9-openssl-load-config.patch
 Patch49: php-7.1.0-curltls.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -995,9 +997,7 @@ support for JavaScript Object Notation (JSON) to PHP.
 %prep
 %setup -q -n php-%{version}%{?rcver}
 
-# ensure than current httpd use prefork MPM.
-httpd -V  | grep -q 'threaded:.*yes' && exit 1
-
+%patch1 -p1 -b .mpmcheck
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
@@ -1011,12 +1011,12 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch48 -p1 -b .loadconf
 %if 0%{?rhel}
 %patch49 -p1 -b .curltls
 %endif
 
 # upstream patches
-%patch100 -p1 -b .up
 
 # security patches
 
@@ -1872,6 +1872,15 @@ fi
 
 
 %changelog
+* Thu Sep 28 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.10-1.ius
+- Latest upstream
+- add Patch1 from Fedora:
+  https://src.fedoraproject.org/rpms/php/c/23dd9d8ca838e981ffbbe87be7b98418efab4218
+- add Patch48 from Fedora:
+  https://src.fedoraproject.org/rpms/php/c/0bfd45f309d48a3d89135605a8172607845112f1
+- comment out pid file in php-fpm.conf from Fedora:
+  https://src.fedoraproject.org/rpms/php/c/9d377692a647d2c5e21c1414ba2002613a5ebd34
+
 * Mon Sep 11 2017 Carl George <carl@george.computer> - 7.1.9-2.ius
 - Enable WebP support when using bundled GD
 
