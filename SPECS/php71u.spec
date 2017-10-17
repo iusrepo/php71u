@@ -85,7 +85,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
 Version: 7.1.10
-Release: 1.ius%{?dist}
+Release: 2.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1525,6 +1525,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 %if ! %{with_systemd}
+sed -i -e 's:^;pid:pid:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 sed -i -e 's:/run:%{_localstatedir}/run:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 sed -i -e 's:/run:%{_localstatedir}/run:' $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 %endif
@@ -1872,6 +1873,9 @@ fi
 
 
 %changelog
+* Tue Oct 17 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.10-2.ius
+- revert pid file in php-fpm.conf for EL6
+
 * Thu Sep 28 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.10-1.ius
 - Latest upstream
 - add Patch1 from Fedora:
