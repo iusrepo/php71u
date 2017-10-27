@@ -84,8 +84,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.10
-Release: 2.ius%{?dist}
+Version: 7.1.11
+Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1873,6 +1873,9 @@ fi
 
 
 %changelog
+* Fri Oct 27 2017 Carl George <carl@george.computer> - 7.1.11-1.ius
+- Latest upstream
+
 * Tue Oct 17 2017 Ben Harper <ben.harper@rackspace.com> - 7.1.10-2.ius
 - revert pid file in php-fpm.conf for EL6
 
