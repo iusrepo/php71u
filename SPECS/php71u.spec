@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.14
+Version: 7.1.15
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -126,7 +126,7 @@ Patch42: php-7.1.0-systzdata-v14.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
-Patch45: php-5.6.3-ldap_r.patch
+Patch45: php-7.1.15-ldap_r.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.6.3-phpinfo.patch
 # Automatically load OpenSSL configuration file
@@ -1866,6 +1866,11 @@ fi
 
 
 %changelog
+* Thu Mar 01 2018 Ben Harper <ben.harper@rackspace.com> - 7.1.15-1.ius
+- Latest upstream
+- update Patch45 from Fedora:
+  https://src.fedoraproject.org/rpms/php/c/c28cab3d90864391987499207fa9a9c801ce244b
+
 * Thu Feb 01 2018 Ben Harper <ben.harper@rackspace.com> - 7.1.14-1.ius
 - Latest upstream
 - remove Patch46, fixed upstream
