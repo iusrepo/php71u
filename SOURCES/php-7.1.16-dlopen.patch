@@ -1,18 +1,18 @@
-diff -Naurp a/sapi/litespeed/lsapilib.c b/sapi/litespeed/lsapilib.c
---- a/sapi/litespeed/lsapilib.c	2017-03-14 08:17:50.000000000 -0500
-+++ b/sapi/litespeed/lsapilib.c	2017-03-15 10:45:09.768894850 -0500
-@@ -616,7 +616,7 @@ static int (*fp_lve_leave)(struct liblve
+diff -Nurp php-7.1.16.orig/sapi/litespeed/lsapilib.c php-7.1.16/sapi/litespeed/lsapilib.c
+--- php-7.1.16.orig/sapi/litespeed/lsapilib.c	2018-03-28 02:12:02.000000000 -0500
++++ php-7.1.16/sapi/litespeed/lsapilib.c	2018-03-30 08:54:33.695677870 -0500
+@@ -755,7 +755,7 @@ static int (*fp_lve_leave)(struct liblve
  static int (*fp_lve_jail)( struct passwd *, char *) = NULL;
- static int lsapi_load_lve_lib()
+ static int lsapi_load_lve_lib(void)
  {
 -    s_liblve = dlopen("liblve.so.0", RTLD_LAZY);
 +    s_liblve = dlopen("liblve.so.0", RTLD_NOW);
      if (s_liblve)
      {
          fp_lve_is_available = dlsym(s_liblve, "lve_is_available");
-diff -Naurp a/Zend/zend_portability.h b/Zend/zend_portability.h
---- a/Zend/zend_portability.h	2017-03-14 08:17:50.000000000 -0500
-+++ b/Zend/zend_portability.h	2017-03-15 10:47:46.909648499 -0500
+diff -Nurp php-7.1.16.orig/Zend/zend_portability.h php-7.1.16/Zend/zend_portability.h
+--- php-7.1.16.orig/Zend/zend_portability.h	2018-03-28 02:11:55.000000000 -0500
++++ php-7.1.16/Zend/zend_portability.h	2018-03-30 08:55:44.091847281 -0500
 @@ -146,11 +146,11 @@
  # endif
  
