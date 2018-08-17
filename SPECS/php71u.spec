@@ -91,7 +91,8 @@ Release: 1.ius%{?dist}
 # TSRM is licensed under BSD
 # main/snprintf.c, main/spprintf.c and main/rfc1867.c are ASL 1.0
 # ext/date/lib is MIT
-License: PHP and Zend and BSD and MIT and ASL 1.0
+# Zend/zend_sort is NCSA
+License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA
 Group: Development/Languages
 URL: http://www.php.net/
 
@@ -208,6 +209,8 @@ to Apache HTTP Server.
 %package cli
 Group: Development/Languages
 Summary: Command-line interface for PHP
+# sapi/cli/ps_title.c is PostgreSQL
+License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA and PostgreSQL
 Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-cgi = %{version}-%{release}, php-cgi%{?_isa} = %{version}-%{release}
 Provides: %{name}-cgi = %{version}-%{release}, %{name}-cgi%{?_isa} = %{version}-%{release}
@@ -1868,6 +1871,7 @@ fi
 %changelog
 * Fri Aug 17 2018 Carl George <carl@george.computer> - 7.1.21-1.ius
 - Latest upstream
+- Add NCSA and PostgreSQL to License (Fedora)
 
 * Mon Jul 23 2018 Carl George <carl@george.computer> - 7.1.20-1.ius
 - Latest upstream
