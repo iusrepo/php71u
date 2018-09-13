@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.21
+Version: 7.1.22
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1869,6 +1869,9 @@ fi
 
 
 %changelog
+* Thu Sep 13 2018 Carl George <carl@george.computer> - 7.1.22-1.ius
+- Latest upstream
+
 * Fri Aug 17 2018 Carl George <carl@george.computer> - 7.1.21-1.ius
 - Latest upstream
 - Add NCSA and PostgreSQL to License (Fedora)
