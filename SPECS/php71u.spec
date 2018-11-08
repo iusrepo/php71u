@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.23
+Version: 7.1.24
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -125,7 +125,7 @@ Patch8: php-7.0.2-libdb.patch
 Patch40: php-7.1.16-dlopen.patch
 Patch42: php-7.1.0-systzdata-v14.patch
 # See http://bugs.php.net/53436
-Patch43: php-5.4.0-phpize.patch
+Patch43: php-7.1.24-phpize.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-7.1.15-ldap_r.patch
 # drop "Configure command" from phpinfo output
@@ -1869,6 +1869,9 @@ fi
 
 
 %changelog
+* Thu Nov 08 2018 Carl George <carl@george.computer> - 7.1.24-1.ius
+- Latest upstream
+
 * Tue Oct 16 2018 Seth Ryder <ryder.seth@gmail.com> - 7.1.23-1.ius
 - Latest upstream
 

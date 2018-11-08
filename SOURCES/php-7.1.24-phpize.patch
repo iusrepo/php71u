@@ -1,0 +1,35 @@
+diff -Nurp php-7.1.24.orig/scripts/phpize.in php-7.1.24/scripts/phpize.in
+--- php-7.1.24.orig/scripts/phpize.in	2018-11-08 15:47:37.682583571 -0600
++++ php-7.1.24/scripts/phpize.in	2018-11-08 15:51:47.324259810 -0600
+@@ -162,6 +162,15 @@ phpize_autotools()
+   $PHP_AUTOHEADER || exit 1
+ }
+ 
++phpize_check_headers()
++{
++  if test ! -f $includedir/main/php.h; then
++    echo "Can't find PHP headers in $includedir"
++    echo "The php-devel package is required for use of this command."
++    exit 1
++  fi
++}
++
+ # Main script
+ 
+ case "$1" in
+@@ -180,12 +189,15 @@ case "$1" in
+ 
+   # Version
+   --version|-v)
++    phpize_check_headers
+     phpize_print_api_numbers
+     exit 0
+   ;;
+ 
+   # Default
+   *)
++     phpize_check_headers
++
+      phpize_check_configm4 0
+ 
+      phpize_check_build_files
