@@ -85,7 +85,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
 Version: 7.1.25
-Release: 1.ius%{?dist}
+Release: 2.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -137,6 +137,7 @@ Patch49: php-7.1.0-curltls.patch
 # Upstream fixes (100+)
 
 # Security fixes (200+)
+Patch200: php-imap.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
@@ -1015,6 +1016,7 @@ support for JavaScript Object Notation (JSON) to PHP.
 # upstream patches
 
 # security patches
+%patch200 -p1 -b .imap
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -1869,6 +1871,9 @@ fi
 
 
 %changelog
+* Tue Dec 11 2018 Carl George <carl@george.computer> - 7.1.25-2.ius
+- Fix null pointer dereference in imap_mail CVE-2018-19935 (Fedora)
+
 * Thu Dec 06 2018 Carl George <carl@george.computer> - 7.1.25-1.ius
 - Latest upstream
 

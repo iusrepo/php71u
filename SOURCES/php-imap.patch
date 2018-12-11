@@ -1,0 +1,71 @@
+From d8765852e0400ee2ce8ae9e2177c42731d4539d8 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Wed, 28 Nov 2018 15:45:51 -0800
+Subject: [PATCH] Add DISPLAY_INI_ENTRIES for imap
+
+---
+ ext/imap/php_imap.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/imap/php_imap.c b/ext/imap/php_imap.c
+index f6feebe9f769..a23e84c08521 100644
+--- a/ext/imap/php_imap.c
++++ b/ext/imap/php_imap.c
+@@ -1153,6 +1153,8 @@ PHP_MINFO_FUNCTION(imap)
+ 	php_info_print_table_row(2, "Kerberos Support", "enabled");
+ #endif
+ 	php_info_print_table_end();
++
++	DISPLAY_INI_ENTRIES();
+ }
+ /* }}} */
+ 
+From 7edc639b9ff1c3576773d79d016abbeed1f93846 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sun, 11 Nov 2018 10:04:01 -0800
+Subject: [PATCH] Fix #77020: null pointer dereference in imap_mail
+
+If an empty $message is passed to imap_mail(), we must not set message
+to NULL, since _php_imap_mail() is not supposed to handle NULL pointers
+(opposed to pointers to NUL).
+---
+ NEWS                         |  1 +
+ ext/imap/php_imap.c          |  1 -
+ ext/imap/tests/bug77020.phpt | 15 +++++++++++++++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+ create mode 100644 ext/imap/tests/bug77020.phpt
+
+diff --git a/ext/imap/php_imap.c b/ext/imap/php_imap.c
+index a23e84c08521..b30440f000f3 100644
+--- a/ext/imap/php_imap.c
++++ b/ext/imap/php_imap.c
+@@ -4125,7 +4125,6 @@ PHP_FUNCTION(imap_mail)
+ 	if (!ZSTR_LEN(message)) {
+ 		/* this is not really an error, so it is allowed. */
+ 		php_error_docref(NULL, E_WARNING, "No message string in mail command");
+-		message = NULL;
+ 	}
+ 
+ 	if (_php_imap_mail(ZSTR_VAL(to), ZSTR_VAL(subject), ZSTR_VAL(message), headers?ZSTR_VAL(headers):NULL, cc?ZSTR_VAL(cc):NULL,
+diff --git a/ext/imap/tests/bug77020.phpt b/ext/imap/tests/bug77020.phpt
+new file mode 100644
+index 000000000000..8a65232eec6d
+--- /dev/null
++++ b/ext/imap/tests/bug77020.phpt
+@@ -0,0 +1,15 @@
++--TEST--
++Bug #77020 (null pointer dereference in imap_mail)
++--SKIPIF--
++<?php
++if (!extension_loaded('imap')) die('skip imap extension not available');
++?>
++--FILE--
++<?php
++imap_mail('1', 1, NULL);
++?>
++===DONE===
++--EXPECTF--
++Warning: imap_mail(): No message string in mail command in %s on line %d
++%s
++===DONE===
+
