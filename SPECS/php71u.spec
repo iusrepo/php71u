@@ -58,23 +58,11 @@
 %global with_libgd 0
 %endif
 
-%if 0%{?fedora} >= 22
-%global with_libpcre 1
-%else
-%global with_libpcre 0
-%endif
-
 %global with_zip     1
 %global with_libzip  0
 # Not yet compatible with firebird 3
 # https://bugs.php.net/bug.php?id=73512
 %global with_firebird 1
-
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-%global db_devel  libdb-devel
-%else
-%global db_devel  db4-devel
-%endif
 
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %global with_systemd 1
@@ -84,7 +72,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.26
+Version: 7.1.27
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -148,10 +136,17 @@ BuildRequires: pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
 BuildRequires: sqlite-devel >= 3.6.0
 BuildRequires: zlib-devel, smtpdaemon, libedit-devel
-%if %{with_libpcre}
-BuildRequires: pcre-devel >= 8.38
+BuildRequires: bzip2
+%if 0%{?fedora} >= 27 || 0%{?rhel} >= 8
+BuildRequires: perl-interpreter
+%else
+BuildRequires: perl
 %endif
-BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: gcc
+BuildRequires: gcc-c++
+BuildRequires: libtool
 BuildRequires: libtool-ltdl-devel
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.11
@@ -387,9 +382,6 @@ package and the php-cli package.
 Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
-%if %{with_libpcre}
-Requires: pcre-devel%{?_isa}
-%endif
 %if %{with_zts}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
@@ -814,7 +806,12 @@ Summary: A database abstraction layer module for PHP applications
 Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
-BuildRequires: %{db_devel}, tokyocabinet-devel
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+BuildRequires: libdb-devel
+%else
+BuildRequires: db4-devel
+%endif
+BuildRequires: tokyocabinet-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-dba = %{version}-%{release}
 Provides: php-dba%{?_isa} = %{version}-%{release}
@@ -1171,9 +1168,6 @@ ln -sf ../configure
     --without-gdbm \
     --with-jpeg-dir=%{_prefix} \
     --with-openssl \
-%if %{with_libpcre}
-    --with-pcre-regex=%{_prefix} \
-%endif
     --with-zlib \
     --with-layout=GNU \
     --with-kerberos \
@@ -1591,7 +1585,9 @@ for mod in pgsql odbc ldap snmp xmlrpc imap json \
     # some extensions have their own config file
     if [ -f ${ini} ]; then
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini}
+      %if %{with_zts}
       cp -p ${ini} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${ini}
+      %endif
     else
       cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${ini} <<EOF
 ; Enable ${mod} extension module
@@ -1649,9 +1645,11 @@ cat files.zip >> files.common
 
 # The default Zend OPcache blacklist file
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
+%if %{with_zts}
 install -m 644 %{SOURCE51} $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/opcache-default.blacklist
 sed -e '/blacklist_filename/s/php.d/php-zts.d/' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/10-opcache.ini
+%endif
 
 # Install the macros file:
 sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
@@ -1667,7 +1665,9 @@ install -m 644 -D macros.php \
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
+%if %{with_zts}
        $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/*.a \
+%endif
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
        $RPM_BUILD_ROOT%{_datadir}/pear \
        $RPM_BUILD_ROOT%{_libdir}/libphp7.la
@@ -1869,6 +1869,9 @@ fi
 
 
 %changelog
+* Thu Mar 07 2019 Carl George <carl@george.computer> - 7.1.27-1.ius
+- Latest upstream
+
 * Fri Jan 11 2019 Carl George <carl@george.computer> - 7.1.26-1.ius
 - Latest upstream
 
