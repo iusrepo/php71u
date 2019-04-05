@@ -72,7 +72,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php71u
-Version: 7.1.27
+Version: 7.1.28
 Release: 1.ius%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -84,7 +84,7 @@ License: PHP and Zend and BSD and MIT and ASL 1.0 and NCSA
 Group: Development/Languages
 URL: http://www.php.net/
 
-Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
+Source0: https://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -1869,6 +1869,9 @@ fi
 
 
 %changelog
+* Fri Apr 05 2019 Carl George <carl@george.computer> - 7.1.28-1.ius
+- Latest upstream
+
 * Thu Mar 07 2019 Carl George <carl@george.computer> - 7.1.27-1.ius
 - Latest upstream
 
