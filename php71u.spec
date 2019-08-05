@@ -1869,7 +1869,7 @@ fi
 
 
 %changelog
-* Tue May 30 2019 Andrew Voss <andrew@voss.codes> - 7.1.30-1
+* Thu May 30 2019 Andrew Voss <andrew@voss.codes> - 7.1.30-1
 - Latest upstream
 
 * Tue May 14 2019 Carl George <carl@george.computer> - 7.1.29-1
